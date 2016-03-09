@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "q<-c(1.4:5.6)\nx<-c(1:5)\nx+3\nseq(1,9)\nseq(1,9,by=2)\nrep(1,9)\n\ns<-1:30\nsum(s)\nmean(s)\nmax(s)\nmin(s)\nmedian(s)\nround(sd(s),3)\nsummary(s)\nsort(s)\nsort(s,decreasing = T)\nrev(s)\n\nmatrix(2,3)\nmatrix(nrow=2,ncol=3)\nmatrix(1:6,nrow=2,ncol=3)\nmatrix(\"a\",nrow=2,ncol=3)\ndim(matrix(1:6,nrow=2,ncol=3))\n",
+    "created" : 1457340345098.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "4272891381",
+    "id" : "580FA4E0",
+    "lastKnownWriteTime" : 1457341324,
+    "last_content_update" : 1457341323879,
+    "path" : "H:/MBA 二下/下午BD/課堂操作/160307/BIGDATACGUIM/0307_2.R",
+    "project_path" : "0307_2.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

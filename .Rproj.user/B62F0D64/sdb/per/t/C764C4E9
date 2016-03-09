@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "1+1\n2*3\n4^5\n\na<-4\nb<-2\na+b\nx<-c(1,2,3)\nx+x\ny<-c(1,2,3,4)\nx+y\nz<-c(1,2,3,4,5,6)\nx+z\nTRUE\n\nsqrt(16)\nround(78422.66666666666641,2)\nround(78422.66666666666641,-2)\n\nclass(a)\nis.character(a)\nx\nlongx<-1:200\nlength(longx)\n\nstringx<-\"How are you?\"\nlength(stringx)\nnchar(stringx)\n\nfloor(14557)\nfloor(14557.1478)\n\n\n\n",
+    "created" : 1457334787916.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1917912665",
+    "id" : "C764C4E9",
+    "lastKnownWriteTime" : 1457340274,
+    "last_content_update" : 1457340272012,
+    "path" : "H:/MBA 二下/下午BD/課堂操作/160307/BIGDATACGUIM/0307.R",
+    "project_path" : "0307.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
