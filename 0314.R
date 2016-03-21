@@ -196,6 +196,10 @@ for(i in 1:nrow(NBA1415)){
     print(NBA1415[i,c("Name","Team","Position")])
   }
 }
+##沒事不要用for因為花時間跑
+
+#PRACTICE 0321
+subset(NBA1415,GamesPlayed>70&TotalPoints>1500)[,c("Name","Team","Position")]
 
 #39
 subset(NBA1415,GamesPlayed>70&TotalPoints>1500)[,c("Name","Team","Position")]
