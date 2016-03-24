@@ -1,4 +1,5 @@
 ##從上次的解答開始
+
 if (!require('SportsAnalytics')){
   install.packages("SportsAnalytics")
   library(SportsAnalytics)
@@ -102,7 +103,7 @@ sapply(NBA1415TP, colMeans)
 aggregate(NBA1415$TotalPoints, by=list(NBA1415$Team,NBA1415$Position), FUN=mean, na.rm=TRUE)
 ##類似apply家族的函數：aggregate()-2
 ###第一欄放formula 你要算的東西 ~ 取的條件
-aggregate(TotalPoints ~ Team+Position, data = NBA1415, mean)
+aggregate(TotalPoints ~ Team+Name+Position, data = NBA1415, mean)
 aggregate(TotalPoints ~ Position, data = NBA1415, mean)
 aggregate(TotalPoints ~ Team, data = NBA1415, max)
 aggregate(TotalRebounds ~ Team+Position, data = NBA1415, mean)

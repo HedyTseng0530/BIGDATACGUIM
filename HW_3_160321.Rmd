@@ -1,0 +1,97 @@
+---
+title: "NBA 2014-2015球季 各隊分析"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+##讀取程式碼
+```{r echo=TRUE}
+if (!require('SportsAnalytics')){
+  install.packages("SportsAnalytics")
+  library(SportsAnalytics)}
+NBA1415<-fetch_NBAPlayerStatistics("14-15")
+```
+
+
+##各隊最辛苦的球員
+計算依據為總出場分鐘數最多的球員<br/>
+-定義一個包含aggregate函數的變數WorkHardest<br/>
+-aggregate函數內篩選Team(所有隊伍)，TotalMinutesPlayed的max(總出場分鐘數最多)<br/>
+-將NBA1415和WorkHardest結合(merge)<br/>
+-output1要顯示隊名,球員姓名,總出場分鐘數<br/>
+-又排序要按照總出場分鐘數(TotalMinutesPlayed)的大到小(decreasing=T)
+```{r echo=TRUE}
+WorkHardest<-aggregate(TotalMinutesPlayed ~ Team,NBA1415, max)
+NBA1415WorkHardest<-merge(NBA1415,WorkHardest)
+output1<-NBA1415WorkHardest[order(NBA1415WorkHardest$TotalMinutesPlayed,decreasing = T)
+,c("Team","Name","TotalMinutesPlayed")]
+library(knitr)
+kable(output1,digit=2)
+```
+
+
+##各隊得分王
+計算依據為全季總得分最多的球員<br/>
+-定義一個包含aggregate函數的變數MaxPoint<br/>
+-aggregate函數內篩選Team(所有隊伍)，TotalPoints的max(得分最多)<br/>
+-將NBA1415和MaxPoint結合(merge)<br/>
+-output2要顯示隊名,球員姓名,總得分<br/>
+-又排序要按照總得分(TotalPoints)的大到小(decreasing=T)
+```{r echo=TRUE}
+MaxPoint<-aggregate(TotalPoints~Team,NBA1415,max)
+NBA1415MaxPoint<-merge(NBA1415,MaxPoint)
+output2<-NBA1415MaxPoint[order(NBA1415MaxPoint$TotalPoints,decreasing = T),c("Team","Name","TotalPoints")]
+library(knitr)
+kable(output2, digits=2)
+```
+
+
+##各隊最有效率的球員
+計算依據為全季總得分除以出戰分鐘數的結果最高的球員<br/>
+-定義x和y向量<br/>
+-x向量為NBA1415 package裡的TotalPoints<br/>
+-y向量為NBA1415 package裡的TotalMinutesPlayed<br/>
+-在NBA1415裡新增一個欄位叫做EfficientRate,它的值為x/y(TotalPoints/TotalMinutesPlayed)<br/>
+-定義一個包含aggregate函數的變數Efficient<br/>
+-aggregate函數內篩選Team(所有隊伍)，EfficientRate的max(得分效率最高)<br/>
+-將NBA1415和Efficient結合(merge)<br/>
+-output3要顯示隊名,球員姓名,效率計算結果<br/>
+-又排序要按照效率計算結果(EfficientRate)的大到小(decreasing=T)
+```{r echo=TRUE}
+x<-c(NBA1415$TotalPoints)
+y<-c(NBA1415$TotalMinutesPlayed)
+NBA1415$EfficientRate<-x/y
+Efficient<-aggregate(EfficientRate~Team,NBA1415,max)
+NBA1415Efficient<-merge(NBA1415,Efficient)
+output3<-NBA1415Efficient[order(NBA1415Efficient$EfficientRate,decreasing = T)
+,c("Team","Name","EfficientRate")]
+library(knitr)
+kable(output3, digits=2)
+```
+
+
+##各隊三分球出手最準的球員
+計算依據為三分球命中率=(三分球進球數除以三分球出手數的結果)最高的球員<br/>
+-定義a和b向量<br/>
+-a向量為NBA1415 package裡的ThreesMade<br/>
+-b向量為NBA1415 package裡的ThreesAttempted<br/>
+-在NBA1415裡新增一個欄位叫做ThreePointRate,它的值為a/b(ThreesMade/ThreesAttempted)<br/>
+-定義一個包含aggregate函數的變數ThreePointer<br/>
+-aggregate函數內篩選Team(所有隊伍)，ThreePointRate的max(三分球命中率最高)<br/>
+-將NBA1415和ThreePointer結合(merge)<br/>
+-output4要顯示隊名,球員姓名,三分球命中率<br/>
+-又排序要按照三分球命中率(ThreePointRate)的大到小(decreasing=T)
+```{r echo=TRUE}
+a<-c(NBA1415$ThreesMade)
+b<-c(NBA1415$ThreesAttempted)
+NBA1415$ThreePointRate<-a/b
+ThreePointer<-aggregate(ThreePointRate~Team,NBA1415,max)
+NBA1415ThreePointer<-merge(NBA1415,ThreePointer)
+output4<-NBA1415ThreePointer[order(NBA1415ThreePointer$ThreePointRate,decreasing = T)
+,c("Team","Name","ThreePointRate")]
+library(knitr)
+kable(output4, digits=2)
+```
