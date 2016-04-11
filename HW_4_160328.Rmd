@@ -24,7 +24,7 @@ if (!require('Rfacebook')){
 -for迴圈是藉由DateVectorStr的計算日期方式，<br/>可以得知在2016/1/1到2016/4/6每兩天蔡英文的發文數，並將資料儲存在tempPage裡，<br/>然後使用rbind function 將每次計算的值累加進totalPage<br/>
 -nrow(totalPage) 可計算totalPage資料總共有幾行，即2016/1/1到2016/4/6總共發文數<br/>
 ```{r echo=TRUE}
-token<-'EAAFVaZBB5eAsBAHSToJaGKiSH0efU1JH8sYTgLqE0U7BEf5a9lnMEKNmaEt3IMbV6pjadWIjan9RSuPkTUMeatx8wf7yKqd5gurWHteMdBI9R2QiruifEFcGmHvjYhxtfpf0EtD545tifCAbslSQCqNxlWalWtRNswjmSXQZDZD'
+token<-'EAACEdEose0cBAEj1y0q6774TbVAAK6MZAWacSTARxrBca7IcfjRGy2hHwHehNUUd9ZBcjRqRYXY4uyRfzv6jGBNXbLMV4wvfa0e0WqOnPh4viBuwtb57ZBZBREZCn0rfoBQztx82C4HTqusJfaxoWn2Axo5hK7fgwRYBjw5NaSgZDZD'
 totalPage<-NULL
 DateVectorStr<-as.character(seq(as.Date("2016-01-01"),as.Date("2016-04-06"),by="2 days"))
 for(i in 1:(length(DateVectorStr)-1)){
@@ -142,5 +142,22 @@ kable(head(ShareCount[order(ShareCount$shares_count,decreasing = T),]))
 2.shares數最多的3/29比平均shares數還要高出將近6倍!推測3/29發布的文章內容能夠引起粉絲團共鳴，以至於付諸行動將文章分享出去希望讓更多人看到<br/>
 3.平均Share數第一名的文章為3/29蔡英文針對內湖隨機殺人事件所做的回應。民眾分享蔡英文的看法，並對此也發表自己的意見。<br/>
 4.由分析結果來看，大眾多分享新聞時事相關的文章，例如總統選舉(1/16,1/17,1/18)以及206大地震祈福文章(2/7,2/11)
+
+##加分題
+```{r echo=TRUE}
+totalComment<-NULL
+
+for(i in 1:10){##會跑很久.....建議先跑十筆就好(1:10)
+post<-getPost(totalPage$id[i],token,n.comments = totalPage$comments_count[i])
+tempComment<-cbind(post$post$id,post$comments$from_name)
+totalComment<-rbind(totalComment,tempComment)
+}
+totalComment<-data.frame(totalComment)
+colnames(totalComment)<-c("postID","commentName")
+NameCount<-aggregate(postID~commentName,totalComment,FUN=length)
+head(NameCount[order(NameCount$postID,decreasing=T),],10)
+
+```
+
 
 

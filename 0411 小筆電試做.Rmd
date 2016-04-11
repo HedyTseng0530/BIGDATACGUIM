@@ -1,0 +1,172 @@
+---
+title: "Untitled"
+output: github_document
+---
+
+```{r results='hide',message=FALSE, warning=FALSE}
+if (!require('reshape2')){
+    install.packages("reshape2")
+    library(reshape2)
+}
+```
+```{r reshape2}
+head(mtcars)
+```
+
+```{r mtcars}
+mtcars$carname <- rownames(mtcars)
+carMelt <- melt(mtcars,id=c("carname","gear","cyl"),
+                measure.vars=c("mpg","hp"))
+head(carMelt,n=3)
+tail(carMelt,n=3)
+```
+
+```{r }
+cylData <- dcast(carMelt, cyl ~ variable)
+cylData
+```
+
+#圖形分析
+```{r message=FALSE,warning=FALSE}
+library(SportsAnalytics) #install.packages("SportsAnalytics")
+NBA1415<-fetch_NBAPlayerStatistics("14-15")
+boxplot(Blocks~Position,data=NBA1415)
+```
+
+##畫圖Package
+```{r echo=TRUE}
+
+if (!require('lattice')){
+    install.packages("lattice")
+    library(lattice)
+}
+
+if (!require('ggplot2')){
+    install.packages("ggplot2")
+    library(ggplot2)
+}
+```
+
+```{r,fig.height=3,fig.width=8}
+#基本畫圖方式，醜，老師不愛
+if (!require('datasets')){
+    install.packages("datasets")
+    library(datasets)
+}
+data(cars)
+plot(cars$speed, cars$dist)
+```
+
+
+## Lattice Plot
+```{r,fig.height=3,fig.width=8}
+if (!require('lattice')){
+    install.packages("lattice")
+    library(lattice)
+}  #呈現三個變數的時候很好用  ex XYZ ，得分數籃板數等等
+
+state <- data.frame(state.x77, region = state.region)
+state
+
+
+```
+```{r,fig.height=2,fig.width=8}
+xyplot(Life.Exp ~ Income | region, data = state, layout = c(4, 1))
+```
+
+
+## ggplot2 Plot
+```{r, message=FALSE,warning=FALSE,fig.height=3,fig.width=6}
+if (!require('ggplot2')){
+    install.packages("ggplot2")
+    library(ggplot2)
+}
+qplot(Life.Exp, Income,facets = .~region, data = state)
+```
+
+## ggplot2 Example 2
+Need `library(ggplot2)`
+```{r, message=FALSE,fig.height=3.5,fig.width=6}
+data(mpg)
+qplot(displ, hwy, data = mpg)
+```
+
+
+## Simple Base Graphics: Histogram
+##直方圖
+```{r,fig.height=3.5}
+library(datasets)
+airquality
+hist(airquality$Ozone)  ## Draw a new plot
+hist(airquality$Solar.R)
+hist(airquality$Wind)
+hist(airquality$Temp)  #曲線接近常態分布
+```
+
+## Simple Base Graphics: Scatterplot
+##散佈圖
+```{r,fig.height=3.5}
+library(datasets)
+with(airquality, plot(Wind, Ozone)) 
+title(main = "Ozone and Wind in New York City")   
+#title資料是疊上去的  所以放在 圖的程式碼之後
+plot(airquality$Wind,airquality$Ozone)   #上下兩個一樣寫法
+
+plot(airquality$Wind,airquality$Ozone,pch=5,col='purple') 
+#pch 換圖型，col換顏色
+```
+
+
+## Simple Base Graphics: Boxplot
+##何須圖
+```{r,fig.height=3.5}
+library(datasets)
+airquality <- transform(airquality, Month = factor(Month))
+boxplot(Ozone ~ Month, airquality, xlab = "Month", ylab = "Ozone (ppb)")
+```
+
+## Base Plot with Annotation
+
+```{r,fig.height=3}
+with(airquality, plot(Wind, Ozone, 
+                      main = "Ozone and Wind in NYC"))
+with(subset(airquality, Month == 5), 
+     points(Wind, Ozone, col = "blue"))
+
+#一層層疊上去 所以如果五月的程式碼先寫，顯示結果會不見，被黑色的蓋掉'
+```
+
+
+
+## Base Plot with Annotation
+
+```{r,fig.height=3}
+with(airquality, plot(Wind, Ozone, main = "Ozone and Wind in NYC", type = "n"))
+with(subset(airquality, Month == 5), points(Wind, Ozone, col = "blue"))
+with(subset(airquality, Month != 5), points(Wind, Ozone, col = "red"))
+legend("topright", pch = 1, col = c("blue", "red"), 
+       legend = c("May", "Other Months"))
+
+#topright 右上角
+```
+
+## Base Plot with Regression Line
+
+```{r,fig.height=3}
+with(airquality, plot(Wind, Ozone, 
+                      main = "Ozone and Wind in NYC", pch = 20))
+model <- lm(Ozone ~ Wind, airquality)
+abline(model, lwd = 2)
+abline(model, lwd = 1,col='red')
+```
+
+
+## Multiple Base Plots
+
+```{r,fig.height=3,fig.width=8}
+par(mfrow = c(1, 2))  #一行裡面畫兩張圖(一個row畫兩張)，先畫的在左邊
+with(airquality, {
+	plot(Wind, Ozone, main = "Ozone and Wind")
+	plot(Solar.R, Ozone, main = "Ozone and Solar Radiation")
+})
+```
