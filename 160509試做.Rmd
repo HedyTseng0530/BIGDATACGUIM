@@ -1,0 +1,89 @@
+---
+title: "Untitled"
+output: github_document
+---
+
+```{r, warning=F,message=F, fig.height=3}
+if (!require('rgdal')){#for fortify()
+install.packages("rgdal");library(rgdal)
+}
+if (!require('rgeos')){#for fortify()
+install.packages("rgeos");library(rgeos)
+}
+if (!require('maptools')){#for readShapeSpatial()
+install.packages("maptools");library(maptools)
+}
+tw_new <- readShapeSpatial("Taiwan/Town_MOI_1041215.shp") #Ò~
+names(tw_new)
+```
+
+```{r, warning=F,message=F, fig.height=3}
+
+if (!require('ggmap')){
+install.packages("ggmap")
+library(ggmap)#for get_map()
+}
+twmap <- get_map(location = 'Taiwan', zoom = 7,language = "zh-TW")
+ggmap(twmap)
+
+ggmap(
+    get_map(location='Taiwan',
+            zoom= 15,
+            language="zh-TW",
+            maptype = "hybrid")
+)
+
+ggmap(twmap)+ #ggmap
+geom_polygon(data = final.plot, #«ñ
+aes(x = long, y = lat, group = group, fill = prevalence),
+color = "grey80", size = 0.1,alpha = 0.5) +
+scale_fill_gradientn(colours = brewer.pal(9,"Reds"))
+
+```
+
+Tile作圖
+
+```{r}
+
+nba <- read.csv("http://datasets.flowingdata.com/ppg2008.csv")
+head(nba)
+
+library(reshape2) #for melt()
+nba.m <- melt(nba,id.vars = "Name") #²/²,~§8¹
+head(nba.m,10)
+
+library(ggplot2) #for ggplot()
+ggplot(nba.m, aes(variable, Name)) + #aes(x,y)
+geom_tile(aes(fill = value),colour = "white")+ #geom_tile: -"
+scale_fill_gradient(low = "white",high = "steelblue") #_(ÛA"
+
+head(nba,2)
+
+nba[,2:21]<-apply(nba[,2:21], 2, scale) #Scale處理，將數值轉為平均為0
+head(nba,2)
+
+```
+
+
+Treemap
+```{r}
+if (!require('treemapify')){
+library(devtools) #install.packages("devtools") ?(Ú
+a<Ú
+install_github("wilkox/treemapify") ##GitHub(Ú�Packages,Úv(Údevtools
+library(treemapify)
+}
+
+data(G20)#¿
+head(G20)
+
+```
+
+
+```{r}
+
+polio<-read.csv("POLIO_Incidence.csv",stringsAsFactors = F)
+head(polio)
+
+```
+
