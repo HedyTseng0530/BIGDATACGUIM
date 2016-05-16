@@ -77,6 +77,7 @@ if (!require('SportsAnalytics')){
 }
 #擷取2014-2015年球季球員資料
 NBA1415<-fetch_NBAPlayerStatistics("14-15")
+NBA1415
 ```
 
 
@@ -394,6 +395,9 @@ qplot(FieldGoalsAttempted, TotalPoints, data = NBA1415,
 ```{r, fig.height=3.5}
 #畫TotalPoints的直方圖/ fill = Position 並用守備位置Position著色
 qplot(TotalPoints, data = NBA1415, fill = Position)
+qplot(FieldGoalsAttempted, data = NBA1415, fill = Position)
+
+#qplot 只有x軸> histogram// x,y軸都有> 散布圖
 ```
 
 
@@ -421,6 +425,7 @@ qplot(hwy, data = mpg, facets = drv ~ ., binwidth = 2)
 ```{r, fig.height=3.5}
 #facets = . ~ Position 用守備位置Position分群畫圖(直向)
 #binwidth = 100 每100分一組
+
 qplot(TotalPoints, data = NBA1415,
       facets = Position ~ ., binwidth = 100)
 ```
@@ -505,7 +510,7 @@ ggplot(NBA1415, aes(x = Position, y = TotalPoints)) +geom_boxplot()
 ```{r, fig.height=4.5, fig.height=3}
 #facet_grid: 加入子圖，Position~.：直向加入，.~Position：橫向加入
 ggplot(NBA1415, aes(x = FieldGoalsAttempted, y = TotalPoints)) +
-    geom_point()+facet_grid(Position~.)
+    facet_grid(Position~.)+geom_point()
 ```
 
 ## 趨勢線 in ggplot2 geom_smooth()
@@ -513,6 +518,9 @@ ggplot(NBA1415, aes(x = FieldGoalsAttempted, y = TotalPoints)) +
 #geom_smooth: 加入趨勢線，method='lm'：linear regression
 ggplot(NBA1415, aes(x = FieldGoalsAttempted, y = TotalPoints)) +
     geom_point()+facet_grid(Position~.)+geom_smooth(method='lm')
+#上下順序些微不同，圖一樣
+ggplot(NBA1415, aes(x = FieldGoalsAttempted, y = TotalPoints)) +
+    facet_grid(Position~.)+geom_point()+geom_smooth(method='lm')
 ```
 
 ## Color group in ggplot2 color=？
@@ -520,6 +528,8 @@ ggplot(NBA1415, aes(x = FieldGoalsAttempted, y = TotalPoints)) +
 #color=Position:用Position當作著色依據
 ggplot(NBA1415, aes(x = FieldGoalsAttempted, y = TotalPoints,color=Position)) +
     geom_point()+geom_smooth(method='lm')
+
+
 ```
 
 
@@ -572,7 +582,7 @@ if (!require('choroplethr')){
     install.packages("choroplethr")
     library(choroplethr)
 }
-#?
+
 if (!require('choroplethrMaps')){
     install.packages("choroplethrMaps")
     library(choroplethrMaps)
