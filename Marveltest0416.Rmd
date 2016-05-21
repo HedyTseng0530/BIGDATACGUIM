@@ -1,0 +1,49 @@
+---
+title: "Untitled"
+output: github_document
+---
+
+Data provided by Marvel. c 2014 Marvel
+
+```{r warning=FALSE,echo=TRUE}
+
+if(!require('jsonlite')){
+install.packages("jsonlite")
+library(jsonlite)}
+
+if(!require('RCurl')){
+install.packages("RCurl")
+library(RCurl)}
+
+```
+
+##Character
+```{r echo=TRUE}
+
+MarvelData<-fromJSON(getURL("http://gateway.marvel.com/v1/public/characters?apikey=3bd2b0257caa456c9a6bacaf4cc4f65f&ts=1&hash=b6b4cbc7ecbd262046774e874256cfe8"))
+names(MarvelData)
+names(MarvelData$data)
+names(MarvelData$data$results)
+MarvelDataFrame<-MarvelData$data$results
+MarvelDataFrame
+dim(MarvelDataFrame) #算這個dataframe  總共是幾乘幾的矩陣 row&col有多少個
+MarvelDataFrame1<-MarvelData$data$results$comics
+MarvelDataFrame1
+
+```
+
+
+##Comics
+```{r echo=TRUE}
+
+MarvelComicData<-fromJSON(getURL("http://gateway.marvel.com/v1/public/comics?format=comic&apikey=3bd2b0257caa456c9a6bacaf4cc4f65f&ts=1&hash=b6b4cbc7ecbd262046774e874256cfe8"))
+names(MarvelComicData)
+names(MarvelComicData$data)
+names(MarvelComicData$data$results)
+names(MarvelComicData$data$results)
+MarvelComicDataFrame<-MarvelComicData$data$results
+MarvelComicDataFrame
+
+MarvelComicDataFrame1<-MarvelComicData$data$results$prices
+MarvelComicDataFrame1
+```
