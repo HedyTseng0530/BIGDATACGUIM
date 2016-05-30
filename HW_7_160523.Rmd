@@ -1,0 +1,78 @@
+---
+title: "糖尿病 預測模型"
+output: github_document
+---
+##資料前處理
+###解釋資料<br/>
+此資料來源為UCI Machine Learning Repository。<br/>
+這份資料的受測者皆為21歲以上並且為Pima印地安人種的女性。此份資料一共有768個樣本，9個參數。參數內容包含年紀、懷孕次數、BMI值、血漿葡萄糖濃度測試、舒張壓、三頭肌皮褶厚度、血清胰島素、糖尿病陰性陽性反應測試等等。<br/>
+
+
+###資料讀取<br/>
+```{r message=F,warning=F}
+install.packages("mlbench")
+library(mlbench)
+data(PimaIndiansDiabetes) 
+str(PimaIndiansDiabetes)
+head(PimaIndiansDiabetes) #diabetes: pos陽性/neg陰性
+```
+
+###選資料完整的欄位
+```{r message=F,warning=F}
+PimaIndiansDiabetesC<-PimaIndiansDiabetes[complete.cases(PimaIndiansDiabetes),]
+c(nrow(PimaIndiansDiabetes),nrow(PimaIndiansDiabetesC))
+```
+
+###將資料隨機分為訓練組與測試組
+```{r}
+#訓練組
+PimaIndiansDiabetesC$Test<-F 
+#測試組
+PimaIndiansDiabetesC[
+    sample(1:nrow(PimaIndiansDiabetesC),nrow(PimaIndiansDiabetesC)/3),
+     ]$Test<-T 
+# 看一下訓練組:測試組 人數
+c(sum(PimaIndiansDiabetesC$Test==F),sum(PimaIndiansDiabetesC$Test==T)) 
+```
+可得訓練組案例數為`r sum(PimaIndiansDiabetesC$Test==F)`，測試組案例數為`r sum(PimaIndiansDiabetesC$Test==T)`
+
+
+##預測模型建立
+###模型建立
+由於輸出為二元類別變項，故選擇邏輯迴歸演算法建立模型，並使用雙向逐步選擇最佳參數組合。
+```{r}
+mod<-glm(diabetes~., PimaIndiansDiabetesC[PimaIndiansDiabetesC$Test==F,],family="binomial")
+library(MASS)
+finalmod<-stepAIC(mod,direction = "both",trace = F)
+summary(finalmod)$coefficients
+```
+###模型說明
+以邏輯迴歸建立模型預測Pima印地安女性糖尿病發病的可能性，經最佳化後，模型使用的醫療記錄資料參數為`r rownames(summary(finalmod)$coefficient)[-1]`，共`r nrow(summary(finalmod)$coefficient)`個參數
+
+
+##預測模型驗證，解釋
+```{r}
+DiabetesPred<-predict(finalmod,newdata = PimaIndiansDiabetesC[PimaIndiansDiabetesC$Test==T,])
+
+table(DiabetesPred<0.5,PimaIndiansDiabetesC[PimaIndiansDiabetesC$Test==T,]$diabetes)
+
+DiabetesAns<-ifelse(DiabetesPred<0.5,"neg","pos") 
+DiabetesAns<-factor(DiabetesAns,levels = c("neg","pos"))
+install.packages("caret")
+library(caret)
+sensitivity(DiabetesAns,PimaIndiansDiabetesC[PimaIndiansDiabetesC$Test==T,]$diabetes)
+
+specificity(DiabetesAns,PimaIndiansDiabetesC[PimaIndiansDiabetesC$Test==T,]$diabetes)
+
+posPredValue(DiabetesAns,PimaIndiansDiabetesC[PimaIndiansDiabetesC$Test==T,]$diabetes)
+
+negPredValue(DiabetesAns,PimaIndiansDiabetesC[PimaIndiansDiabetesC$Test==T,]$diabetes)
+```
+
+以邏輯迴歸建立模型預測Pima印地安女性糖尿病發病的可能性，可得:
+
+▪敏感度` r sensitivity(DiabetesAns,PimaIndiansDiabetesC[PimaIndiansDiabetesC$Test==T,]$diabetes)*100%`
+▪特異性` r specificity(DiabetesAns,PimaIndiansDiabetesC[PimaIndiansDiabetesC$Test==T,]$diabetes)*100%`
+▪陽性預測率` r posPredValue(DiabetesAns,PimaIndiansDiabetesC[PimaIndiansDiabetesC$Test==T,]$diabetes)*100%`
+▪陰性預測率` r negPredValue(DiabetesAns,PimaIndiansDiabetesC[PimaIndiansDiabetesC$Test==T,]$diabetes)*100%`
+
