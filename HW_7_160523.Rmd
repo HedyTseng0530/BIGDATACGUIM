@@ -3,15 +3,17 @@ title: "糖尿病 預測模型"
 output: github_document
 ---
 ##資料前處理
-###解釋資料<br/>
+###解釋資料
 此資料來源為UCI Machine Learning Repository。<br/>
 這份資料的受測者皆為21歲以上並且為Pima印地安人種的女性。此份資料一共有768個樣本，9個參數。參數內容包含年紀、懷孕次數、BMI值、血漿葡萄糖濃度測試、舒張壓、三頭肌皮褶厚度、血清胰島素、糖尿病陰性陽性反應測試等等。<br/>
 
 
-###資料讀取<br/>
+###資料讀取
 ```{r message=F,warning=F}
-install.packages("mlbench")
-library(mlbench)
+if (!require('mlbench')){
+    install.packages("mlbench")
+    library(mlbench)
+}
 data(PimaIndiansDiabetes) 
 str(PimaIndiansDiabetes)
 head(PimaIndiansDiabetes) #diabetes: pos陽性/neg陰性
@@ -58,8 +60,10 @@ table(DiabetesPred<0.5,PimaIndiansDiabetesC[PimaIndiansDiabetesC$Test==T,]$diabe
 
 DiabetesAns<-ifelse(DiabetesPred<0.5,"neg","pos") 
 DiabetesAns<-factor(DiabetesAns,levels = c("neg","pos"))
-install.packages("caret")
-library(caret)
+if (!require('caret')){
+    install.packages("caret")
+    library(caret)
+}
 sensitivity(DiabetesAns,PimaIndiansDiabetesC[PimaIndiansDiabetesC$Test==T,]$diabetes)
 
 specificity(DiabetesAns,PimaIndiansDiabetesC[PimaIndiansDiabetesC$Test==T,]$diabetes)
@@ -69,10 +73,10 @@ posPredValue(DiabetesAns,PimaIndiansDiabetesC[PimaIndiansDiabetesC$Test==T,]$dia
 negPredValue(DiabetesAns,PimaIndiansDiabetesC[PimaIndiansDiabetesC$Test==T,]$diabetes)
 ```
 
-以邏輯迴歸建立模型預測Pima印地安女性糖尿病發病的可能性，可得:
+以邏輯迴歸建立模型預測Pima印地安女性糖尿病發病的可能性，可得:<br/>
 
-▪敏感度` r sensitivity(DiabetesAns,PimaIndiansDiabetesC[PimaIndiansDiabetesC$Test==T,]$diabetes)*100%`
-▪特異性` r specificity(DiabetesAns,PimaIndiansDiabetesC[PimaIndiansDiabetesC$Test==T,]$diabetes)*100%`
-▪陽性預測率` r posPredValue(DiabetesAns,PimaIndiansDiabetesC[PimaIndiansDiabetesC$Test==T,]$diabetes)*100%`
-▪陰性預測率` r negPredValue(DiabetesAns,PimaIndiansDiabetesC[PimaIndiansDiabetesC$Test==T,]$diabetes)*100%`
+敏感度 `r sensitivity(DiabetesAns,PimaIndiansDiabetesC[PimaIndiansDiabetesC$Test==T,]$diabetes)*100`% <br/>
+特異性`r specificity(DiabetesAns,PimaIndiansDiabetesC[PimaIndiansDiabetesC$Test==T,]$diabetes)*100`% <br/>
+陽性預測率`r posPredValue(DiabetesAns,PimaIndiansDiabetesC[PimaIndiansDiabetesC$Test==T,]$diabetes)*100`% <br/>
+陰性預測率`r negPredValue(DiabetesAns,PimaIndiansDiabetesC[PimaIndiansDiabetesC$Test==T,]$diabetes)*100`% <br/>
 
